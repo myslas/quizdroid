@@ -1,10 +1,12 @@
 package edu.washington.yslasm.quizdroid;
 
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
 import android.widget.Button;
@@ -12,22 +14,22 @@ import android.view.View;
 import android.widget.RadioGroup;
 
 
-public class Question extends ActionBarActivity {
+public class Question extends Fragment {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_question);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.activity_question, container, false);
 
-        Intent test = getIntent();
-        TextView tv = (TextView) findViewById(R.id.name);
+
+        final Intent test = getActivity().getIntent();
+        TextView tv = (TextView) view.findViewById(R.id.name);
         final String name = test.getStringExtra("name");
         tv.setText(test.getStringExtra("name"));
-        TextView question = (TextView) findViewById(R.id.question);
-        TextView answer1 = (TextView) findViewById(R.id.answer1);
-        TextView answer2 = (TextView) findViewById(R.id.answer2);
-        TextView answer3 = (TextView) findViewById(R.id.answer3);
-        TextView answer4 = (TextView) findViewById(R.id.answer4);
+        TextView question = (TextView) view.findViewById(R.id.question);
+        TextView answer1 = (TextView) view.findViewById(R.id.answer1);
+        TextView answer2 = (TextView) view.findViewById(R.id.answer2);
+        TextView answer3 = (TextView) view.findViewById(R.id.answer3);
+        TextView answer4 = (TextView) view.findViewById(R.id.answer4);
 
         final int numCorrect = test.getIntExtra("numCorrect", 0);
         final int count = test.getIntExtra("count", 0);
@@ -62,30 +64,33 @@ public class Question extends ActionBarActivity {
 
         }
 
-        Button b = (Button) findViewById(R.id.button);
+        Button b = (Button) view.findViewById(R.id.button);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RadioGroup radioGroup = (RadioGroup) findViewById(R.id.group);
+                RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.group);
                 if(radioGroup.getCheckedRadioButtonId() != -1) {
                     TextView radioButton = (TextView) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
-                    Intent nextActivity = new Intent(Question.this, AnswerSummary.class);
-                    nextActivity.putExtra("name", name);
-                    nextActivity.putExtra("count", count + 1);
-                    nextActivity.putExtra("answer", radioButton.getText());
-                    nextActivity.putExtra("numCorrect", numCorrect);
-                    startActivity(nextActivity);
+                    test.putExtra("name", name);
+                    test.putExtra("count", count + 1);
+                    test.putExtra("answer", "" + radioButton.getText());
+                    test.putExtra("numCorrect", numCorrect);
+                    Fragment answerFragment = new AnswerSummary();
+                    answerFragment.setArguments(getActivity().getIntent().getExtras());
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                    // Replace whatever is in the fragment_container view with this fragment,
+                    // and add the transaction to the back stack
+                    transaction.replace(R.id.fragment_container, answerFragment);
+                    transaction.addToBackStack(null);
+
+                    // Commit the transaction
+                    transaction.commit();
                 }
             }
         });
-    }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_question, menu);
-        return true;
+        return view;
     }
 
     @Override

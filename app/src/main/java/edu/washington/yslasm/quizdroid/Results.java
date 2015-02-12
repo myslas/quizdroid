@@ -1,51 +1,46 @@
 package edu.washington.yslasm.quizdroid;
 
+import android.app.Fragment;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 
-public class Results extends ActionBarActivity {
+public class Results extends Fragment {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_results);
+        View view = inflater.inflate(R.layout.activity_results, container, false);
 
-        Intent test = getIntent();
-        TextView tv = (TextView) findViewById(R.id.name);
-        final String name = test.getStringExtra("name");
+        Intent test = getActivity().getIntent();
+        TextView tv = (TextView) view.findViewById(R.id.name);
         tv.setText(test.getStringExtra("name"));
 
         int count = test.getIntExtra("count", 0);
         int numCorrect = test.getIntExtra("numCorrect", 0);
 
-        TextView summary = (TextView) findViewById(R.id.summary);
+        TextView summary = (TextView) view.findViewById(R.id.summary);
         summary.setText("You have correctly answered " + numCorrect + " questions out of " + count);
 
-        Button b = (Button) findViewById(R.id.button);
+        Button b = (Button) view.findViewById(R.id.button);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nextActivity = new Intent(Results.this, MainActivity.class);
+                Intent nextActivity = new Intent(getActivity(), MainActivity.class);
                 startActivity(nextActivity);
             }
         });
 
+        return view;
+
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_results, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

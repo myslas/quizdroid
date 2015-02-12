@@ -1,37 +1,41 @@
 package edu.washington.yslasm.quizdroid;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 
-public class AnswerSummary extends ActionBarActivity {
+public class AnswerSummary extends Fragment {
+
+    final String TAG = "AnswerSummary";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_answer_summary);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_answer_summary, container, false);
 
-        Intent test = getIntent();
-        TextView tv = (TextView) findViewById(R.id.name);
-        final String name = test.getStringExtra("name");
-        tv.setText(test.getStringExtra("name"));
+        final Intent sumIntent = getActivity().getIntent();
+        TextView tv = (TextView) view.findViewById(R.id.name);
+        final String name = sumIntent.getStringExtra("name");
+        tv.setText(sumIntent.getStringExtra("name"));
 
-        TextView userAnswer = (TextView) findViewById(R.id.useranswer);
-        String answer = test.getStringExtra("answer");
+        TextView userAnswer = (TextView) view.findViewById(R.id.useranswer);
+        String answer = sumIntent.getStringExtra("answer");
+        Log.i(TAG, "answer = " + answer);
         userAnswer.setText("Your answer: " + answer);
 
-        final int count = test.getIntExtra("count", 0);
-        int numCorrect = test.getIntExtra("numCorrect", 0);
-        TextView rightAnswer = (TextView) findViewById(R.id.rightanswer);
+        final int count = sumIntent.getIntExtra("count", 0);
+        int numCorrect = sumIntent.getIntExtra("numCorrect", 0);
+        TextView rightAnswer = (TextView) view.findViewById(R.id.rightanswer);
         Questions q = new Questions();
         if(name.equals("Math")) {
             ArrayList<String> right = q.getMathCorrect();
@@ -54,45 +58,37 @@ public class AnswerSummary extends ActionBarActivity {
 
         }
 
-        TextView summary = (TextView) findViewById(R.id.summary);
+        TextView summary = (TextView) view.findViewById(R.id.summary);
         summary.setText("You have correctly answered " + numCorrect + " questions out of " + count);
         final int num = numCorrect;
 
-        Button b = (Button) findViewById(R.id.button);
+        Button b = (Button) view.findViewById(R.id.button);
         if(count == 3) {
             b.setText("Finish");
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-            public void onClick(View v) {
-                    Intent nextActivity = new Intent(AnswerSummary.this, Results.class);
-                    nextActivity.putExtra("name", name);
-                    nextActivity.putExtra("count", count);
-                    nextActivity.putExtra("numCorrect", num);
-                    startActivity(nextActivity);
-                }
-            });
-        } else {
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent nextActivity = new Intent(AnswerSummary.this, Question.class);
-                    nextActivity.putExtra("name", name);
-                    nextActivity.putExtra("count", count);
-                    nextActivity.putExtra("numCorrect", num);
-                    startActivity(nextActivity);
-                }
-            });
         }
 
+        b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                sumIntent.putExtra("name", name);
+                sumIntent.putExtra("count", count);
+                sumIntent.putExtra("numCorrect", num);
+                    Fragment questionFragment = new Question();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                    // Replace whatever is in the fragment_container view with this fragment,
+                    // and add the transaction to the back stack
+                    transaction.replace(R.id.fragment_container, questionFragment);
+                    transaction.addToBackStack(null);
+
+                    // Commit the transaction
+                    transaction.commit();
+            }
+        });
+
+        return view;
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_answer_summary, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
