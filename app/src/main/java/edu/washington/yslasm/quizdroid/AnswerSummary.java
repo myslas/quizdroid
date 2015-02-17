@@ -36,7 +36,7 @@ public class AnswerSummary extends Fragment {
         final int count = sumIntent.getIntExtra("count", 0);
         int numCorrect = sumIntent.getIntExtra("numCorrect", 0);
         TextView rightAnswer = (TextView) view.findViewById(R.id.rightanswer);
-        Questions q = new Questions();
+        QuizApp q = new QuizApp();
         if(name.equals("Math")) {
             ArrayList<String> right = q.getMathCorrect();
             rightAnswer.setText("Correct answer: " + right.get(count - 1));
@@ -65,14 +65,32 @@ public class AnswerSummary extends Fragment {
         Button b = (Button) view.findViewById(R.id.button);
         if(count == 3) {
             b.setText("Finish");
-        }
-
-        b.setOnClickListener(new View.OnClickListener() {
+            b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                sumIntent.putExtra("name", name);
-                sumIntent.putExtra("count", count);
-                sumIntent.putExtra("numCorrect", num);
+                    sumIntent.putExtra("name", name);
+                    sumIntent.putExtra("count", count);
+                    sumIntent.putExtra("numCorrect", num);
+                    Fragment resultsFragment = new Results();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                    // Replace whatever is in the fragment_container view with this fragment,
+                    // and add the transaction to the back stack
+                    transaction.replace(R.id.fragment_container, resultsFragment);
+                    transaction.addToBackStack(null);
+
+                    // Commit the transaction
+                    transaction.commit();
+                }
+            });
+        } else {
+
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sumIntent.putExtra("name", name);
+                    sumIntent.putExtra("count", count);
+                    sumIntent.putExtra("numCorrect", num);
                     Fragment questionFragment = new Question();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -83,8 +101,9 @@ public class AnswerSummary extends Fragment {
 
                     // Commit the transaction
                     transaction.commit();
-            }
-        });
+                }
+            });
+        }
 
         return view;
     }

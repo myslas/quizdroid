@@ -22,17 +22,14 @@ public class OverviewFragment extends Fragment {
         TextView tv = (TextView) view.findViewById(R.id.name);
         tv.setText(name);
         TextView overview = (TextView) view.findViewById(R.id.overview);
+        QuizApp q = new QuizApp();
 
         if(name.equals("Marvel Super Heroes")) {
-            overview.setText("The Marvel Universe is the shared fictional " +
-                    "universe where stories in most comic book titles and other media published " +
-                    "by Marvel Entertainment take place, including those featuring Marvel's most " +
-                    "familiar characters, such as Spider-Man, the X-Men, the Fantastic Four and the Avengers.");
+            overview.setText(q.MarvelTopic().get(2));
         } else if(name.equals("Math")) {
-            overview.setText("Mathematics (from Greek μάθημα máthēma, “knowledge, study, " +
-                    "learning”) is the study of topics such as quantity (numbers), structure, space, and change.");
+            overview.setText(q.MathTopic().get(2));
         } else {
-            overview.setText("Physics  is the natural science that involves the study of matter and its motion through space and time, along with related concepts such as energy and force.");
+            overview.setText(q.PhysicsTopic().get(2));
         }
 
         Button b = (Button) view.findViewById(R.id.button);

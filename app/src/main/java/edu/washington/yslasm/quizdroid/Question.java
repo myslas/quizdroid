@@ -33,7 +33,7 @@ public class Question extends Fragment {
 
         final int numCorrect = test.getIntExtra("numCorrect", 0);
         final int count = test.getIntExtra("count", 0);
-        Questions q = new Questions();
+        QuizApp q = new QuizApp();
         if(name.equals("Marvel Super Heroes")) {
             ArrayList<String> questions = q.getMarvelQuestions();
             ArrayList<String> answers = q.getMarvelAnswers();

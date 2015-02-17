@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
 import android.view.View;
 import android.content.Intent;
 import android.widget.AdapterView;
-import android.graphics.Color;
+import android.widget.SimpleAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -19,11 +23,25 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final ListView listView = (ListView) findViewById(R.id.listView);
+        QuizApp q = new QuizApp();
 
-        String[] names = {"Math", "Physics", "Marvel Super Heroes"};
+        final String[] names = {q.MathTopic().get(0), q.PhysicsTopic().get(0), q.MarvelTopic().get(0)};
+        String[] descriptions = {q.MathTopic().get(1), q.PhysicsTopic().get(1), q.MarvelTopic().get(1)};
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, names);
+        List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        for (int i = 0; i < names.length; i++) {
+            Map<String, String> datum = new HashMap<String, String>(2);
+            datum.put("names", names[i]);
+            datum.put("descriptions", descriptions[i]);
+            data.add(datum);
+        }
+        SimpleAdapter adapter = new SimpleAdapter(this, data,
+                android.R.layout.simple_list_item_2,
+                new String[] {"names", "descriptions"},
+                new int[] {android.R.id.text1,
+                        android.R.id.text2});
+
+
 
         listView.setAdapter(adapter);
 
@@ -31,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent nextActivity = new Intent(MainActivity.this, Overview.class);
-                nextActivity.putExtra("name", listView.getItemAtPosition(position).toString());
+                nextActivity.putExtra("name", names[position]);
                 startActivity(nextActivity);
             }
         });

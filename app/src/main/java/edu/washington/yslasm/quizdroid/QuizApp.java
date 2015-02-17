@@ -1,9 +1,14 @@
 package edu.washington.yslasm.quizdroid;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 
-public class Questions {
+public class QuizApp extends android.app.Application {
+    public static ArrayList<String> MathTopic = new ArrayList<String>();
+    public static ArrayList<String> PhysicsTopic = new ArrayList<String>();
+    public static ArrayList<String> MarvelTopic = new ArrayList<String>();
     public static ArrayList<String> MathQuestions = new ArrayList<String>();
     public static ArrayList<String> PhysicsQuestions = new ArrayList<String>();
     public static ArrayList<String> MarvelQuestions = new ArrayList<String>();
@@ -13,8 +18,38 @@ public class Questions {
     public static ArrayList<String> MathCorrect = new ArrayList<String>();
     public static ArrayList<String> PhysicsCorrect = new ArrayList<String>();
     public static ArrayList<String> MarvelCorrect = new ArrayList<String>();
+    public final String TAG = "QuizApp";
 
+    public  QuizApp() {
+        Log.i(TAG, "QuizApp object being run");
+    }
 
+    public ArrayList<String> MathTopic() {
+        MathTopic.add("Math");
+        MathTopic.add("The Power of Numbers");
+        MathTopic.add("Mathematics (from Greek μάθημα máthēma, “knowledge, study," +
+                " learning”) is the study of topics such as quantity (numbers), structure, space, and change.");
+        return MathTopic;
+
+    }
+    public ArrayList<String> PhysicsTopic() {
+        PhysicsTopic.add("Physics");
+        PhysicsTopic.add("Formulas and Laws of Motion");
+        PhysicsTopic.add("Physics  is the natural science that involves the study of matter and its motion through space " +
+                "and time, along with related concepts such as energy and force.");
+        return PhysicsTopic;
+
+    }
+    public ArrayList<String> MarvelTopic() {
+        MarvelTopic.add("Marvel Super Heroes");
+        MarvelTopic.add("Who doesn't love Superheroes");
+        MarvelTopic.add("The Marvel Universe is the shared fictional " +
+                "universe where stories in most comic book titles and other media published " +
+                "by Marvel Entertainment take place, including those featuring Marvel's most " +
+                "familiar characters, such as Spider-Man, the X-Men, the Fantastic Four and the Avengers.");
+        return MarvelTopic;
+
+    }
     public ArrayList<String> getMathQuestions() {
         MathQuestions.add("What is 2 + 2?");
         MathQuestions.add("What is the square root of 49?");

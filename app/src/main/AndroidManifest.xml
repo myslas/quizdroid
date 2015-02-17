@@ -20,18 +20,8 @@
             android:name=".Overview"
             android:label="@string/title_activity_overview" >
         </activity>
-        <activity
-            android:name=".Question"
-            android:label="@string/title_activity_question" >
-        </activity>
-        <activity
-            android:name=".AnswerSummary"
-            android:label="@string/title_activity_answer_summary" >
-        </activity>
-        <activity
-            android:name=".Results"
-            android:label="@string/title_activity_results" >
-        </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.wifi" />
 
 </manifest>
